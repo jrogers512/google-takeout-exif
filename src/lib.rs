@@ -683,12 +683,11 @@ impl<'a> Processor<'_> {
                     "avi"
                 } else if file_type.contains("canon cr2") {
                     "cr2"
-                } else if file_type.trim() == "data"
-                    || file_type.contains("ascii text")
-                    || file_type.contains("canon ciff raw image data")
-                {
-                    // wtf is this? return the original extension
-                    dest_path.extension().unwrap().to_str().unwrap()
+                } else if let Some(extension) = dest_path.extension().and_then(|ext| ext.to_str()) {
+                    let recognized_extensions = vec!["jpg", "jpeg", "png", "mp4", "mov", "avi", "gif"];
+                    if recognized_extensions.contains(&extension) {
+                        println!("Unfamiliar file type, using recognized file extension: {}", extension);
+                        extension.to_string()
                 } else {
                     panic!(
                         "Unknown file type: `{}` while processing file `{}`",
