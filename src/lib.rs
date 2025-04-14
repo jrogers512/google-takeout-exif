@@ -684,11 +684,13 @@ impl<'a> Processor<'_> {
                 } else if file_type.contains("canon cr2") {
                     "cr2"
                 } else if let Some(extension) = dest_path.extension().and_then(|ext| ext.to_str()) {
-                    let recognized_extensions = vec!["jpg", "jpeg", "png", "mp4", "mov", "avi", "gif"];
+                    let extension = extension.to_ascii_lowercase(); // Normalize to lowercase
+                    let recognized_extensions = vec!["3gp", "avi", "bmp", "cr2", "gif", "heic", "jpg", "jpeg", "m4v", "mkv", "mov", "mp", "mp4", "png", "tif", "webp", "wmv"];
                     if recognized_extensions.contains(&extension) {
                         println!("Unfamiliar file type, using recognized file extension: {}", extension);
                         extension.to_string()
                 } else {
+                    // tempted to change this to a fallback to allow the script to progress
                     panic!(
                         "Unknown file type: `{}` while processing file `{}`",
                         file_type,
